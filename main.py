@@ -4,6 +4,23 @@ import requests
 import os
 import concurrent.futures
 
+def get_file_from_wiki():
+    filename = "HST-SM4.jpeg"
+    url = "https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg"
+
+    headers = {
+        "User-Agent": "MyPythonApp/1.0 (https://example.com/contact)"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        with open(filename, 'wb') as file:
+            file.write(response.content)
+        print(f"Файл {filename} успешно сохранён.")
+    except requests.RequestException as e:
+        print(f"Ошибка загрузки файла: {e}")
+
 def get_file_extension(url: str) -> str:
     path = urlsplit(url).path
     path = unquote(path)

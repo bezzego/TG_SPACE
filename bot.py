@@ -14,6 +14,7 @@ def main():
 
     bot = Bot(token=token)
     bot.send_message(chat_id=chat_id, text=text)
+    with open("epic_images/epic_1.png", "rb") as photo:        bot.send_photo(chat_id=chat_id, photo=photo, caption="Смотрите, какая красота!")
 
 if __name__ == "__main__":
     main()

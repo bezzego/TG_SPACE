@@ -17,6 +17,10 @@
    TELEGRAM_BOT_TOKEN=ваш_токен_бота
    TELEGRAM_CHAT_ID=-100xxxxxxxxxx
    PUBLISH_DELAY_HOURS=4
+   NASA_API_URL=https://api.nasa.gov/planetary/apod
+   NASA_API_KEY=ваш_токен_с_сайта_NASA
+   NASA_EPIC_URL=https://api.nasa.gov/EPIC/api/xxxxx
+   PACEX_API_URL=https://api.spacexdata.com/xxxxxxxx
    ```
 
 3. Убедитесь, что в директории `epic_images` (или любой другой) есть изображения в формате `.jpg`, `.jpeg` или `.png`.

@@ -6,64 +6,62 @@ from telegram import Bot
 from PIL import Image
 from dotenv import load_dotenv
 
-load_dotenv()
+def run_bot():
+    DEFAULT_DELAY_HOURS = 4
+    MAX_FILE_SIZE_MB = 20
 
-DEFAULT_DELAY_HOURS = 4
-MAX_FILE_SIZE_MB = 20
 
-def compress_image(path, max_size_mb=20):
-    image = Image.open(path)
-    temp_path = "temp_" + os.path.basename(path)
-    image.save(temp_path, optimize=True, quality=85)
-    if os.path.getsize(temp_path) <= max_size_mb * 1024 * 1024:
+    def compress_image(path, max_size_mb=20):
+        image = Image.open(path)
+        temp_path = "temp_" + os.path.basename(path)
+        image.save(temp_path, optimize=True, quality=85)
+        if os.path.getsize(temp_path) <= max_size_mb * 1024 * 1024:
+            return temp_path
+        image.save(temp_path, optimize=True, quality=65)
         return temp_path
-    image.save(temp_path, optimize=True, quality=65)
-    return temp_path
 
-def publish_photos(directory, token, chat_id, delay_hours):
-    bot = Bot(token=token)
-    while True:
-        photos = [os.path.join(directory, f) for f in os.listdir(directory)
-                  if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
-        if not photos:
-            print("В директории нет изображений.")
-            time.sleep(delay_hours * 3600)
-            continue
 
-        random.shuffle(photos)
+    def publish_photos(directory, token, chat_id, delay_hours):
+        bot = Bot(token=token)
+        while True:
+            photos = [os.path.join(directory, f) for f in os.listdir(directory)
+                      if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
+            if not photos:
+                print("В директории нет изображений.")
+                time.sleep(delay_hours * 3600)
+                continue
 
-        for photo_path in photos:
-            try:
-                if os.path.getsize(photo_path) > MAX_FILE_SIZE_MB * 1024 * 1024:
-                    print(f"{photo_path} слишком большой, пытаюсь сжать...")
-                    photo_path = compress_image(photo_path)
+            random.shuffle(photos)
 
-                with open(photo_path, 'rb') as photo:
-                    bot.send_photo(chat_id=chat_id, photo=photo)
+            for photo_path in photos:
+                try:
+                    if os.path.getsize(photo_path) > MAX_FILE_SIZE_MB * 1024 * 1024:
+                        print(f"{photo_path} слишком большой, пытаюсь сжать...")
+                        photo_path = compress_image(photo_path)
 
-                print(f"Опубликовано: {photo_path}")
-            except Exception as e:
-                print(f"Ошибка при публикации {photo_path}: {e}")
+                    with open(photo_path, 'rb') as photo:
+                        bot.send_photo(chat_id=chat_id, photo=photo)
 
-            time.sleep(delay_hours * 3600)
+                    print(f"Опубликовано: {photo_path}")
+                except Exception as e:
+                    print(f"Ошибка при публикации {photo_path}: {e}")
 
-def main():
-    parser = argparse.ArgumentParser(description="Автоматическая публикация изображений в Telegram-канал.")
-    parser.add_argument("directory", nargs='?', default="epic_images", help="Путь к директории с изображениями (по умолчанию 'epic_images')")
-    parser.add_argument("--delay", type=float, default=float(os.getenv("PUBLISH_DELAY_HOURS", DEFAULT_DELAY_HOURS)),
-                        help="Интервал между публикациями в часах (по умолчанию 4)")
-    parser.add_argument("--token", default=os.getenv("TELEGRAM_BOT_TOKEN"), help="Токен Telegram-бота (или переменная окружения TELEGRAM_BOT_TOKEN)")
-    parser.add_argument("--chat-id", default=os.getenv("TELEGRAM_CHAT_ID"), help="chat_id Telegram-канала (или переменная окружения TELEGRAM_CHAT_ID)")
+                time.sleep(delay_hours * 3600)
 
-    args = parser.parse_args()
-    print("DEBUG token:", args.token)
-    print("DEBUG chat_id:", args.chat_id)
 
-    if not args.token or not args.chat_id:
-        print("Ошибка: не задан токен или chat_id. Укажите их через аргументы командной строки или переменные окружения TELEGRAM_BOT_TOKEN и TELEGRAM_CHAT_ID.")
-        return
+    def main():
+        load_dotenv()
+        parser = argparse.ArgumentParser(description="Автоматическая публикация изображений в Telegram-канал.")
+        parser.add_argument("directory", nargs='?', default="epic_images")
+        parser.add_argument("--delay", type=float, default=float(os.getenv("PUBLISH_DELAY_HOURS", DEFAULT_DELAY_HOURS)))
+        parser.add_argument("--token", default=os.getenv("TELEGRAM_BOT_TOKEN"))
+        parser.add_argument("--chat-id", default=os.getenv("TELEGRAM_CHAT_ID"))
 
-    publish_photos(args.directory, args.token, args.chat_id, args.delay)
+        args = parser.parse_args()
+        publish_photos(args.directory, args.token, args.chat_id, args.delay)
+
+    main()
+
 
 if __name__ == "__main__":
-    main()
+    run_bot()

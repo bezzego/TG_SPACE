@@ -44,7 +44,7 @@ def main():
     args = parser.parse_args()
     try:
         fetch_spacex_images(base_url, args.id)
-    except Exception as e:
+    except requests.RequestException as e:
         print(f"Ошибка при получении изображений SpaceX: {e}")
 
 if __name__ == "__main__":

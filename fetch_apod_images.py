@@ -35,7 +35,7 @@ def main():
 
     try:
         fetch_apod_images(API_URL, API_KEY)
-    except Exception as e:
+    except requests.RequestException as e:
         print(f"Ошибка при получении изображений: {e}")
 
 if __name__ == "__main__":

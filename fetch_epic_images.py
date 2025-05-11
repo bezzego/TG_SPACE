@@ -41,7 +41,7 @@ def fetch_epic_images(count=10):
 def main():
     try:
         fetch_epic_images()
-    except Exception as e:
+    except requests.RequestException as e:
         print(f"Ошибка при получении изображений EPIC: {e}")
 
 if __name__ == "__main__":

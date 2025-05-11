@@ -6,6 +6,12 @@ from utils import get_file_extension
 from utils import download_image
 from dotenv import load_dotenv
 
+def download_spacex_image(photo_url, i):
+    print(photo_url)
+    ext = get_file_extension(photo_url) or ".jpg"
+    filename = os.path.join("spacex_images", f"spacex_{i + 1}{ext}")
+    download_image(photo_url, filename)
+
 def fetch_spacex_images(base_url, launch_id=None):
     os.makedirs("spacex_images", exist_ok=True)
     if launch_id:
@@ -25,15 +31,9 @@ def fetch_spacex_images(base_url, launch_id=None):
     print(f"Название запуска: {data.get('name')}")
     print("Ссылки на фото:")
 
-    def download(photo_url, i):
-        print(photo_url)
-        ext = get_file_extension(photo_url) or ".jpg"
-        filename = os.path.join("spacex_images", f"spacex_{i + 1}{ext}")
-        download_image(photo_url, filename)
-
     with concurrent.futures.ThreadPoolExecutor() as executor:
         for i, url in enumerate(photos):
-            executor.submit(download, url, i)
+            executor.submit(download_spacex_image, url, i)
 
 def main():
     load_dotenv()
@@ -42,7 +42,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--id", help="ID запуска SpaceX (если не указан – берётся последний)")
     args = parser.parse_args()
-    fetch_spacex_images(base_url, args.id)
+    try:
+        fetch_spacex_images(base_url, args.id)
+    except Exception as e:
+        print(f"Ошибка при получении изображений SpaceX: {e}")
 
 if __name__ == "__main__":
     main()

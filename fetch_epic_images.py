@@ -25,12 +25,8 @@ def fetch_epic_images(count=10):
     os.makedirs("epic_images", exist_ok=True)
     params = {"api_key": API_KEY}
 
-    try:
-        response = requests.get(API_URL, params=params)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        print(f"Ошибка запроса к EPIC API: {e}")
-        return
+    response = requests.get(API_URL, params=params)
+    response.raise_for_status()
 
     items = response.json()
     if not items:
@@ -43,7 +39,10 @@ def fetch_epic_images(count=10):
 
 
 def main():
-    fetch_epic_images()
+    try:
+        fetch_epic_images()
+    except Exception as e:
+        print(f"Ошибка при получении изображений EPIC: {e}")
 
 if __name__ == "__main__":
     main()

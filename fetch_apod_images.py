@@ -18,12 +18,8 @@ def fetch_apod_images(api_url, api_key, count=30):
     os.makedirs("apod_images", exist_ok=True)
     params = {"api_key": api_key, "count": count}
 
-    try:
-        response = requests.get(api_url, params=params)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        print(f"Ошибка запроса к APOD API: {e}")
-        return
+    response = requests.get(api_url, params=params)
+    response.raise_for_status()
 
     items = response.json()
 
@@ -37,7 +33,10 @@ def main():
     API_URL = os.getenv("NASA_API_URL")
     API_KEY = os.getenv("NASA_API_KEY")
 
-    fetch_apod_images(API_URL, API_KEY)
+    try:
+        fetch_apod_images(API_URL, API_KEY)
+    except Exception as e:
+        print(f"Ошибка при получении изображений: {e}")
 
 if __name__ == "__main__":
     main()

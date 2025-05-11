@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv
 import requests
 import concurrent.futures
-from utils import get_file_extension
+from utils import get_file_extension, download_image
 
 
 def main():
@@ -29,13 +29,8 @@ def main():
                 return
             url = item.get("url")
             ext = get_file_extension(url) or ".jpg"
-            try:
-                img_data = requests.get(url).content
-                filename = os.path.join("apod_images", f"apod_{i + 1}{ext}")
-                with open(filename, 'wb') as f:
-                    f.write(img_data)
-            except Exception as e:
-                print(f"Ошибка при скачивании {url}: {e}")
+            filename = os.path.join("apod_images", f"apod_{i + 1}{ext}")
+            download_image(url, filename)
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for i, item in enumerate(items):

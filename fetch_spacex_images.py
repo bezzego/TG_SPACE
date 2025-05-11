@@ -3,6 +3,7 @@ import requests
 import argparse
 import concurrent.futures
 from utils import get_file_extension
+from utils import download_image
 from dotenv import load_dotenv
 
 def main():
@@ -29,15 +30,10 @@ def main():
         print("Ссылки на фото:")
 
         def download(photo_url, i):
-            try:
-                print(photo_url)
-                ext = get_file_extension(photo_url) or ".jpg"
-                img_data = requests.get(photo_url).content
-                filename = os.path.join("spacex_images", f"spacex_{i + 1}{ext}")
-                with open(filename, 'wb') as f:
-                    f.write(img_data)
-            except Exception as e:
-                print(f"Ошибка при скачивании {photo_url}: {e}")
+            print(photo_url)
+            ext = get_file_extension(photo_url) or ".jpg"
+            filename = os.path.join("spacex_images", f"spacex_{i + 1}{ext}")
+            download_image(photo_url, filename)
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             for i, url in enumerate(photos):

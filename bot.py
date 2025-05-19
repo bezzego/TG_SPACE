@@ -7,8 +7,10 @@ from telegram import Bot
 from PIL import Image
 from dotenv import load_dotenv
 
+
 DEFAULT_DELAY_HOURS = 4
 MAX_FILE_SIZE_MB = 20
+
 
 def compress_image(path, max_size_mb=20):
     temp_path = "temp_" + os.path.basename(path)
@@ -25,6 +27,7 @@ def get_image_files(directory):
     return [os.path.join(directory, f) for f in os.listdir(directory)
             if f.lower().endswith(('.jpg', '.jpeg', '.png'))]
 
+
 def publish_photo(bot, chat_id, photo_path):
     if os.path.getsize(photo_path) > MAX_FILE_SIZE_MB * 1024 * 1024:
         print(f"{photo_path} слишком большой, пытаюсь сжать...")
@@ -32,6 +35,7 @@ def publish_photo(bot, chat_id, photo_path):
     with open(photo_path, 'rb') as photo:
         bot.send_photo(chat_id=chat_id, photo=photo)
     print(f"Опубликовано: {photo_path}")
+
 
 def publish_photos(directory, token, chat_id, delay_hours):
     bot = Bot(token=token)

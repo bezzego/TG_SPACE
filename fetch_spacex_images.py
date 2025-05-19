@@ -6,10 +6,12 @@ from utils import get_file_extension
 from utils import download_image
 from dotenv import load_dotenv
 
+
 def download_spacex_image(photo_url, i):
     ext = get_file_extension(photo_url) or ".jpg"
     filename = os.path.join("spacex_images", f"spacex_{i}{ext}")
     download_image(photo_url, filename)
+
 
 def fetch_spacex_images(launch_id=None):
     base_url = os.getenv("SPACEX_API_URL", "https://api.spacexdata.com/v5/launches")
@@ -33,6 +35,7 @@ def fetch_spacex_images(launch_id=None):
         for i, url in enumerate(photos, start=1):
             executor.submit(download_spacex_image, url, i)
 
+
 def main():
     load_dotenv()
 
@@ -43,6 +46,7 @@ def main():
         fetch_spacex_images(args.id)
     except requests.RequestException as e:
         print(f"Ошибка при получении изображений SpaceX: {e}")
+
 
 if __name__ == "__main__":
     main()

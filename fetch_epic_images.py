@@ -45,6 +45,7 @@ def main():
     except requests.RequestException as e:
         print(f"Ошибка при получении изображений EPIC: {e}")
 
+
 if __name__ == "__main__":
     load_dotenv()
     main()

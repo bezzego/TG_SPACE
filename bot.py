@@ -13,7 +13,7 @@ MAX_FILE_SIZE_MB = 20
 
 
 def compress_image(path, max_size_mb=20):
-    temp_path = "temp_" + os.path.basename(path)
+    temp_path = f"temp_{os.path.basename(path)}"
     with Image.open(path) as image:
         image.save(temp_path, optimize=True, quality=85)
         if os.path.getsize(temp_path) <= max_size_mb * 1024 * 1024:

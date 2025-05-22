@@ -14,8 +14,7 @@ def download_apod_image(item, i, api_key, api_url):
     download_image(url, filename)
 
 
-def fetch_apod_images(api_key, count=30):
-    api_url = os.getenv("NASA_API_URL")
+def fetch_apod_images(api_key, api_url, count=30):
     os.makedirs("apod_images", exist_ok=True)
     params = {"api_key": api_key, "count": count}
 
@@ -35,7 +34,7 @@ def main():
     API_KEY = os.environ["NASA_API_KEY"]
 
     try:
-        fetch_apod_images(API_KEY)
+        fetch_apod_images(API_KEY, API_URL)
     except requests.RequestException as e:
         print(f"Ошибка при получении изображений: {e}")
 

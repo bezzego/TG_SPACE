@@ -13,14 +13,17 @@ def download_spacex_image(photo_url, i):
     download_image(photo_url, filename)
 
 
-def fetch_spacex_images(launch_id=None):
-    base_url = os.getenv("SPACEX_API_URL", "https://api.spacexdata.com/v5/launches")
+def fetch_spacex_images(launch_id=None, base_url="https://api.spacexdata.com/v5/launches"):
     os.makedirs("spacex_images", exist_ok=True)
     if launch_id:
         url = f"{base_url}/{launch_id}"
-        launches = [requests.get(url).json()]
+        response = requests.get(url)
+        response.raise_for_status()
+        launches = [response.json()]
     else:
-        launches = requests.get(base_url).json()[::-1]
+        response = requests.get(base_url)
+        response.raise_for_status()
+        launches = response.json()[::-1]
 
     for data in launches:
         photos = data.get("links", {}).get("flickr", {}).get("original", [])
@@ -43,7 +46,8 @@ def main():
     parser.add_argument("--id", help="ID запуска SpaceX (если не указан – берётся последний)")
     args = parser.parse_args()
     try:
-        fetch_spacex_images(args.id)
+        base_url = os.getenv("SPACEX_API_URL", "https://api.spacexdata.com/v5/launches")
+        fetch_spacex_images(args.id, base_url)
     except requests.RequestException as e:
         print(f"Ошибка при получении изображений SpaceX: {e}")
 

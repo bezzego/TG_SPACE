@@ -1,6 +1,3 @@
-
-
-
 ## Автоматическая публикация фото в Telegram-канал
 
 Скрипт `bot.py` публикует фото из указанной директории в Telegram-канал с заданной периодичностью.
@@ -11,6 +8,12 @@
    ```
    pip install -r requirements.txt
    ```
+   Если файл requirements.txt отсутствует, создайте его вручную со следующим содержимым:
+
+   requests==2.31.0
+   python-telegram-bot[urllib3]==13.15
+   Pillow==10.2.0
+   python-dotenv==1.0.1
 
 2. Создайте файл `.env` в корне проекта со следующим содержимым:
    ```
@@ -42,20 +45,15 @@
 
 - Загрузка фото NASA APOD:
   ```
-  python fetch_apod.py
+  python fetch_apod_images.py
   ```
 
 - Загрузка фото NASA EPIC:
   ```
-  python fetch_epic.py
+  python fetch_epic_images.py
   ```
 
 - Загрузка фото с последнего запуска SpaceX:
   ```
-  python fetch_spacex.py
-  ```
-
-- Загрузка фото с конкретного запуска SpaceX по ID:
-  ```
-  python fetch_spacex.py --id <launch_id>
+  python fetch_spacex_images.py
   ```

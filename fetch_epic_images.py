@@ -20,7 +20,8 @@ def download_epic_image(item, i, api_key):
     download_image(img_url, filename, params=params)
 
 
-def fetch_epic_images(api_url, api_key, count=10):
+def fetch_epic_images(api_key, count=10):
+    api_url = "https://api.nasa.gov/EPIC/api/natural"
     os.makedirs("epic_images", exist_ok=True)
     params = {"api_key": api_key}
 
@@ -38,14 +39,13 @@ def fetch_epic_images(api_url, api_key, count=10):
 
 
 def main():
+    load_dotenv()
+    API_KEY = os.environ["NASA_API_KEY"]
     try:
-        API_URL = os.environ["NASA_EPIC_URL"]
-        API_KEY = os.environ["NASA_API_KEY"]
-        fetch_epic_images(API_URL, API_KEY)
+        fetch_epic_images(API_KEY)
     except requests.RequestException as e:
         print(f"Ошибка при получении изображений EPIC: {e}")
 
 
 if __name__ == "__main__":
-    load_dotenv()
     main()

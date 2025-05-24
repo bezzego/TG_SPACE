@@ -22,8 +22,8 @@
    PUBLISH_DELAY_HOURS=4
    NASA_API_URL=https://api.nasa.gov/planetary/apod
    NASA_API_KEY=ваш_токен_с_сайта_NASA
-   NASA_EPIC_URL=https://api.nasa.gov/EPIC/api/xxxxx
-   PACEX_API_URL=https://api.spacexdata.com/xxxxxxxx
+   NASA_EPIC_URL=https://api.nasa.gov/EPIC/api/natural/images
+   SPACEX_API_URL=https://api.spacexdata.com/v5/launches
    ```
 
 3. Убедитесь, что в директории `epic_images` (или любой другой) есть изображения в формате `.jpg`, `.jpeg` или `.png`.

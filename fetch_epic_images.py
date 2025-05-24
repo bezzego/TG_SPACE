@@ -13,7 +13,9 @@ def download_epic_image(item, i, api_key):
     year = date.strftime("%Y")
     month = date.strftime("%m")
     day = date.strftime("%d")
-    img_url = f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{name}.png"
+    img_url = (
+        f"https://api.nasa.gov/EPIC/archive/natural/{year}/{month}/{day}/png/{name}.png"
+    )
     params = {"api_key": api_key}
 
     filename = os.path.join("epic_images", f"epic_{i}.png")
@@ -40,9 +42,9 @@ def fetch_epic_images(api_key, count=10):
 
 def main():
     load_dotenv()
-    API_KEY = os.environ["NASA_API_KEY"]
+    api_key = os.environ["NASA_API_KEY"]
     try:
-        fetch_epic_images(API_KEY)
+        fetch_epic_images(api_key)
     except requests.RequestException as e:
         print(f"Ошибка при получении изображений EPIC: {e}")
 

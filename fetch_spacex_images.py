@@ -13,7 +13,8 @@ def download_spacex_image(photo_url, i):
     download_image(photo_url, filename)
 
 
-def fetch_spacex_images(launch_id=None, base_url="https://api.spacexdata.com/v5/launches"):
+def fetch_spacex_images(launch_id=None):
+    base_url = "https://api.spacexdata.com/v5/launches"
     os.makedirs("spacex_images", exist_ok=True)
     if launch_id:
         url = f"{base_url}/{launch_id}"
@@ -33,7 +34,6 @@ def fetch_spacex_images(launch_id=None, base_url="https://api.spacexdata.com/v5/
         print("Фото не найдены ни в одном из последних запусков.")
         return
 
-
     with concurrent.futures.ThreadPoolExecutor() as executor:
         for i, url in enumerate(photos, start=1):
             executor.submit(download_spacex_image, url, i)
@@ -43,11 +43,12 @@ def main():
     load_dotenv()
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--id", help="ID запуска SpaceX (если не указан – берётся последний)")
+    parser.add_argument(
+        "--id", help="ID запуска SpaceX (если не указан – берётся последний)"
+    )
     args = parser.parse_args()
     try:
-        base_url = os.getenv("SPACEX_API_URL", "https://api.spacexdata.com/v5/launches")
-        fetch_spacex_images(args.id, base_url)
+        fetch_spacex_images(args.id)
     except requests.RequestException as e:
         print(f"Ошибка при получении изображений SpaceX: {e}")
 

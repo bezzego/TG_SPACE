@@ -9,6 +9,11 @@ from dotenv import load_dotenv
 import tempfile
 
 
+def is_under_size(file_path, max_size_mb):
+    """Return True if file size is <= max_size_mb in megabytes."""
+    return os.path.getsize(file_path) <= max_size_mb * 1024 * 1024
+
+
 DEFAULT_DELAY_HOURS = 4
 MAX_FILE_SIZE_MB = 20
 
@@ -20,7 +25,7 @@ def compress_image(path, max_size_mb=20):
     tmp_file.close()
     with Image.open(path) as image:
         image.save(temp_path, optimize=True, quality=85)
-        if os.path.getsize(temp_path) <= max_size_mb * 1024 * 1024:
+        if is_under_size(temp_path, max_size_mb):
             return temp_path
         image.save(temp_path, optimize=True, quality=65)
         return temp_path
@@ -35,7 +40,7 @@ def get_image_files(directory):
 
 
 def publish_photo(bot, chat_id, photo_path):
-    if os.path.getsize(photo_path) > MAX_FILE_SIZE_MB * 1024 * 1024:
+    if not is_under_size(photo_path, MAX_FILE_SIZE_MB):
         print(f"{photo_path} слишком большой, пытаюсь сжать...")
         photo_path = compress_image(photo_path)
     with open(photo_path, "rb") as photo:

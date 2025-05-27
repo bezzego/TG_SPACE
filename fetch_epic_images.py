@@ -19,7 +19,9 @@ def download_epic_image(item, i, api_key):
     params = {"api_key": api_key}
 
     filename = os.path.join("epic_images", f"epic_{i}.png")
-    download_image(img_url, filename, params=params)
+    query_string = urlencode(params)
+    full_url = f"{img_url}?{query_string}"
+    download_image(full_url, filename)
 
 
 def fetch_epic_images(api_key, count=10):

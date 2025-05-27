@@ -19,6 +19,9 @@ MAX_FILE_SIZE_MB = 20
 
 
 def compress_image(path, max_size_mb=20):
+    # if original file already under size, no need to compress
+    if is_under_size(path, max_size_mb):
+        return path
     suffix = os.path.splitext(path)[1]
     tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
     temp_path = tmp_file.name
@@ -26,9 +29,10 @@ def compress_image(path, max_size_mb=20):
     with Image.open(path) as image:
         image.save(temp_path, optimize=True, quality=85)
         if is_under_size(temp_path, max_size_mb):
-            return temp_path
-        image.save(temp_path, optimize=True, quality=65)
-        return temp_path
+            pass
+        else:
+            image.save(temp_path, optimize=True, quality=65)
+    return temp_path
 
 
 def get_image_files(directory):
@@ -40,9 +44,10 @@ def get_image_files(directory):
 
 
 def publish_photo(bot, chat_id, photo_path):
-    if not is_under_size(photo_path, MAX_FILE_SIZE_MB):
+    new_path = compress_image(photo_path, MAX_FILE_SIZE_MB)
+    if new_path != photo_path:
         print(f"{photo_path} слишком большой, пытаюсь сжать...")
-        photo_path = compress_image(photo_path)
+        photo_path = new_path
     with open(photo_path, "rb") as photo:
         bot.send_photo(chat_id=chat_id, photo=photo)
     print(f"Опубликовано: {photo_path}")

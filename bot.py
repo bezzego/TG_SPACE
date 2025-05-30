@@ -28,9 +28,7 @@ def compress_image(path, max_size_mb=20):
     tmp_file.close()
     with Image.open(path) as image:
         image.save(temp_path, optimize=True, quality=85)
-        if is_under_size(temp_path, max_size_mb):
-            pass
-        else:
+        if not is_under_size(temp_path, max_size_mb):
             image.save(temp_path, optimize=True, quality=65)
     return temp_path
 

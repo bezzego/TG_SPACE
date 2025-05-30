@@ -1,7 +1,7 @@
 import os
 import requests
 import concurrent.futures
-from utils import get_file_extension, download_image
+from utils import download_image
 from dotenv import load_dotenv
 from urllib.parse import urlencode
 from datetime import datetime

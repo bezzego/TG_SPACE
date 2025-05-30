@@ -5,7 +5,7 @@ import concurrent.futures
 from utils import get_file_extension, download_image
 
 
-def download_apod_image(item, i, api_key, api_url):
+def download_apod_image(item, i):
     if item.get("media_type") != "image":
         return
     url = item.get("url")
@@ -26,7 +26,7 @@ def fetch_apod_images(api_key, count=30):
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         for i, item in enumerate(items, start=1):
-            executor.submit(download_apod_image, item, i, api_key, api_url)
+            executor.submit(download_apod_image, item, i)
 
 
 def main():

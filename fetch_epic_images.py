@@ -3,7 +3,6 @@ import requests
 import concurrent.futures
 from utils import download_image
 from dotenv import load_dotenv
-from urllib.parse import urlencode
 from datetime import datetime
 
 
@@ -19,9 +18,7 @@ def download_epic_image(item, i, api_key):
     params = {"api_key": api_key}
 
     filename = os.path.join("epic_images", f"epic_{i}.png")
-    query_string = urlencode(params)
-    full_url = f"{img_url}?{query_string}"
-    download_image(full_url, filename)
+    download_image(img_url, filename, params=params)
 
 
 def fetch_epic_images(api_key, count=10):

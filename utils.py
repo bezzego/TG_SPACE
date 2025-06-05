@@ -11,8 +11,8 @@ def get_file_extension(url: str) -> str:
     return ext
 
 
-def download_image(url: str, filename: str):
-    response = requests.get(url)
+def download_image(url: str, filename: str, params=None):
+    response = requests.get(url, params=params)
     response.raise_for_status()  # выбрасывает исключение, если HTTP-статус >= 400
-    with open(filename, 'wb') as f:
+    with open(filename, "wb") as f:
         f.write(response.content)
